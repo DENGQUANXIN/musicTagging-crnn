@@ -1,0 +1,8 @@
+numpy==1.14.5
+progress==1.5
+pandas==0.24.2
+Keras==2.2.4
+tensorflow_gpu==1.12.0
+librosa==0.6.3
+scikit_learn==0.21.2
+tensorflow==1.14.0
