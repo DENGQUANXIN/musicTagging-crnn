@@ -12,8 +12,7 @@
 import os
 
 # DIRECTORY
-# DATA_DIR = "./data"
-DATA_DIR = "/home/doubtd/Documents/datasets/music/MagnaTagATune/data"
+DATA_DIR = "./data"
 ANNOTA_PATH = os.path.join(DATA_DIR, "annotations_final.csv")  # annotations file
 MP3_DIR = os.path.join(DATA_DIR, 'mp3')  # directory for saving mp3 format audio
 SAVE_DIR = os.path.join('data', 'npys')  # directory for saving features
