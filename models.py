@@ -44,4 +44,6 @@ def music_crnn(input_shape, num_class):
 
     model.add(Dense(num_class, activation='sigmoid', name='output'))
 
+    model.summary()
+
     return model

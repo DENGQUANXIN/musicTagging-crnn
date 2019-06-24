@@ -35,16 +35,13 @@ KTF.set_session(sess)
 
 
 def createDatasets():
+    # load annotation csv
     df = pd.read_csv(c.ANNOTA_PATH, delimiter='\t')
     mp3_paths = df['mp3_path'].values
     labels = df[c.TAGS].values
     length = len(labels)
 
-    shuffle_inx = np.arange(0, length)
-    shuffle_inx = np.random.choice(shuffle_inx, size=length)
-    labels = labels[shuffle_inx]
-    mp3_paths = mp3_paths[shuffle_inx]
-
+    # split dataset
     train_paths = mp3_paths[:int(length*c.TRAIN_RATIO)]
     train_y = labels[:int(length*c.TRAIN_RATIO)]
     val_paths = mp3_paths[int(length*c.TRAIN_RATIO):int(length*(c.TRAIN_RATIO+c.VAL_RATIO))]
@@ -71,8 +68,11 @@ def loadAllData(dataset):
         try:
             feat_path = os.path.splitext(paths[i])[0]+'.npy'
             feat_path = os.path.join(c.SAVE_DIR, feat_path)
+
+            # convert (1, 96, 1440) to (96, 1440, 1)
             x_array = np.squeeze(np.load(feat_path))
             x_array = np.expand_dims(x_array, 2)
+
             x.append(x_array)
             y.append(labels[i])
         except Exception as e:
@@ -109,35 +109,14 @@ def dataLoader(dataset):
             yield (np.array(x), np.array(y))
 
 
-def valDataLoader(dataset):
-    (paths, labels) = dataset
-
-    while True:
-        idx = 0
-        while idx < len(labels) - c.BATCH_SIZE:
-            x, y = [], []
-            while len(x) < c.BATCH_SIZE:
-                idx += 1
-                try:
-                    feat_path = os.path.splitext(paths[idx])[0]+'.npy'
-                    feat_path = os.path.join(c.SAVE_DIR, feat_path)
-                    x_array = np.squeeze(np.load(feat_path))
-                    x_array = np.expand_dims(x_array, 2)
-                    x.append(x_array)
-                    y.append(labels[idx])
-                except Exception as e:
-                    print(e)
-
-            yield (np.array(x), np.array(y))
-
-
 def main(mode):
-    train_dataset, val_dataset, test_dataset = createDatasets()
     model = music_crnn((96, 1366, 1), len(c.TAGS))
     
     if mode == 'train':
-        print(f"#SIZE train dataset: {len(train_dataset[1])}")
-        print(f"#SIZE validation dataset: {len(val_dataset[1])}")
+        train_dataset, val_dataset, _ = createDatasets()
+
+        print(f"#SIZE of train dataset: {len(train_dataset[1])}")
+        print(f"#SIZE of validation dataset: {len(val_dataset[1])}")
         print("Starting training...")
         optimizer = keras.optimizers.SGD(lr=0.1, nesterov=True, decay=1e-6)
         model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
@@ -150,10 +129,11 @@ def main(mode):
                             validation_steps=len(val_dataset[1]) // c.BATCH_SIZE,
                             callbacks=[early_stopping, checkpointer_best])
     else:
+        _, __, test_dataset = createDatasets()
         if not os.path.exists('y_pre.npy'):
             model.load_weights(f'{c.CHECKPOINT_DIR}/best.h5')
             start = time.time()
-            print(f"#SIZE test dataset: {len(test_dataset[1])}")
+            print(f"#SIZE of test dataset: {len(test_dataset[1])}")
             print("Starting load test dataset....")
             (x, y_true) = loadAllData(test_dataset)
             print(f"Completed, time usage: {time.time()-start}s")
