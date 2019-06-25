@@ -85,12 +85,12 @@ def dataLoader(dataset):
     (paths, labels) = dataset
     length = len(labels)
 
-    shuffle_inx = np.arange(0, length)
-    shuffle_inx = np.random.choice(shuffle_inx, size=length)
-    paths = paths[shuffle_inx]
-    labels = labels[shuffle_inx]
-
     while True:
+        # shuffle train data
+        shuffle_inx = np.arange(0, length)
+        shuffle_inx = np.random.choice(shuffle_inx, size=length, replace=False)
+        paths = paths[shuffle_inx]
+        labels = labels[shuffle_inx]
         idx = 0
         while idx < len(labels) - c.BATCH_SIZE:
             x, y = [], []

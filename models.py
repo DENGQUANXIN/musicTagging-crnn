@@ -13,16 +13,16 @@ import keras.backend as K
 from keras.models import Sequential
 from keras.layers import Input, ZeroPadding2D
 from keras.layers.normalization import BatchNormalization
-from keras.layers import Convolution2D, MaxPooling2D, Dropout
+from keras.layers import Conv2D, MaxPool2D, Dropout
 from keras.layers import GRU, ELU, Reshape, Dense
 from keras import Model
 
 
 def cnn_block(model, num_filters, pool_size, layer_id):
-    model.add(Convolution2D(num_filters, 3, padding='same', name=f'conv{layer_id}'))
+    model.add(Conv2D(num_filters, 3, padding='same', name=f'conv{layer_id}'))
     model.add(BatchNormalization(axis=-1, name=f'bn{layer_id}'))
     model.add(ELU(name=f'elu{layer_id}'))
-    model.add(MaxPooling2D(pool_size, name=f'pool{layer_id}'))
+    model.add(MaxPool2D(pool_size, name=f'pool{layer_id}'))
     model.add(Dropout(0.1, name=f'dropout{layer_id}'))
 
     return model

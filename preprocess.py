@@ -39,7 +39,7 @@ if __name__ == "__main__":
     audio_paths = df['mp3_path']
 
     total = len(audio_paths)
-    bar = Bar('Processing', max=len(audio_paths), fill='@', suffix='%(percent)d%%')
+    bar = Bar('Processing', max=len(audio_paths), fill='#', suffix='%(percent)d%%')
     for audio_path in audio_paths:
         bar.next()
         save_file = os.path.splitext(audio_path)[0] + '.npy'

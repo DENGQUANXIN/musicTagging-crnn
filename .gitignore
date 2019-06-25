@@ -1,1 +1,6 @@
 .vscode
+__pycache__
+e_run.py
+y_pre.npy
+y_true.npy
+models.py.bak

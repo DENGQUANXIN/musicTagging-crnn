@@ -52,3 +52,7 @@ Run preprocess: `python preprocess.py`
 Run train: `python run.py train`
 
 Run test: `python run.py test`
+
+## Result
+
+ROC-AUC=0.692121
