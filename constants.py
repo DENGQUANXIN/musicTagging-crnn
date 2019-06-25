@@ -42,9 +42,3 @@ TAGS = ['choral', 'female voice', 'metal', 'country', 'weird', 'no voice',
         'slow', 'classical', 'guitar']
 BATCH_SIZE = 16
 THRESHOLD = 0.5
-
-# END2END MODEL
-E_LEN_AUDIO = 29
-E_NUM_SAMPLE = 59049
-E_SR = 22050
-E_SEGMENT = E_LEN_AUDIO * E_SR // E_NUM_SAMPLE
